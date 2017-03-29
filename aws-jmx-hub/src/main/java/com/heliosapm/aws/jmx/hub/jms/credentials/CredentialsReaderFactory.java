@@ -10,31 +10,23 @@
 // General Public License for more details.  You should have received a copy
 // of the GNU Lesser General Public License along with this program.  If not,
 // see <http://www.gnu.org/licenses/>.
-package com.heliosapm.aws.jmx.agent;
+package com.heliosapm.aws.jmx.hub.jms.credentials;
 
-import com.heliosapm.aws.jmx.AWSJVMMetaDataService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * <p>Title: BindAddressProvider</p>
- * <p>Description: Provides a network bind address</p> 
+ * <p>Title: CredentialsReaderFactory</p>
+ * <p>Description: Defines a factory that creates a new {@link AWSCredentialsReader}.</p> 
  * <p>Company: Helios Development Group LLC</p>
  * @author Whitehead (nwhitehead AT heliosdev DOT org)
- * <p><code>com.heliosapm.aws.jmx.agent.BindAddressProvider</code></p>
+ * <p><code>com.heliosapm.aws.jmx.hub.jms.credentials.CredentialsReaderFactory</code></p>
  */
 
-public interface BindAddressProvider {
+public interface CredentialsReaderFactory {
 	/**
-	 * Returns a bind address in the form of an ip or host name
-	 * @return a bind address
+	 * Creates a new AWSCredentialsReader
+	 * @param credsNode The credentials configuration node
+	 * @return the created AWSCredentialsReader
 	 */
-	public String getBindAddress();
-	
-	/**
-	 * Returns the appropriate JMXServiceURL string for externally connecting to this JVM
-	 * @param jmxmpPort The JMXMP listening port
-	 * @return a JMXServiceURL string
-	 */
-	public String getJMXServiceURL(final int jmxmpPort);
-	
-	public static final AWSJVMMetaDataService META_SERVICE = AWSJVMMetaDataService.getInstance();
+	public AWSCredentialsReader newReader(final ObjectNode credsNode);
 }

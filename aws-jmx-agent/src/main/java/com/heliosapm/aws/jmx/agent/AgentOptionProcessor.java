@@ -12,29 +12,21 @@
 // see <http://www.gnu.org/licenses/>.
 package com.heliosapm.aws.jmx.agent;
 
-import com.heliosapm.aws.jmx.AWSJVMMetaDataService;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+
 
 /**
- * <p>Title: BindAddressProvider</p>
- * <p>Description: Provides a network bind address</p> 
+ * <p>Title: AgentOptionProcessor</p>
+ * <p>Description: Defines an operation performed on a command line or agent option</p> 
  * <p>Company: Helios Development Group LLC</p>
  * @author Whitehead (nwhitehead AT heliosdev DOT org)
- * <p><code>com.heliosapm.aws.jmx.agent.BindAddressProvider</code></p>
+ * <p><code>com.heliosapm.aws.jmx.agent.AgentOptionProcessor</code></p>
  */
 
-public interface BindAddressProvider {
-	/**
-	 * Returns a bind address in the form of an ip or host name
-	 * @return a bind address
-	 */
-	public String getBindAddress();
-	
-	/**
-	 * Returns the appropriate JMXServiceURL string for externally connecting to this JVM
-	 * @param jmxmpPort The JMXMP listening port
-	 * @return a JMXServiceURL string
-	 */
-	public String getJMXServiceURL(final int jmxmpPort);
-	
-	public static final AWSJVMMetaDataService META_SERVICE = AWSJVMMetaDataService.getInstance();
+public interface AgentOptionProcessor {
+	public static final Pattern NAME_VALUE_SPLITTER = Pattern.compile("=");
+	public void commandLine(final String value, final StringBuilder agentOpts, final Map<AgentOption, Object> extracted);
+	public void agentOpts(final String value, final Map<AgentOption, Object> extracted);
 }

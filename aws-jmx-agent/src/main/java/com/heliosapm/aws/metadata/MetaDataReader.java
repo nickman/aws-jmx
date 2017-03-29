@@ -15,7 +15,9 @@ package com.heliosapm.aws.metadata;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.heliosapm.aws.json.JSONUtil;
 import com.heliosapm.utils.config.ConfigurationHelper;
+import com.heliosapm.utils.lang.StringHelper;
 import com.heliosapm.utils.url.URLHelper;
 
 /**
@@ -40,6 +43,8 @@ import com.heliosapm.utils.url.URLHelper;
 public class MetaDataReader {
 	
 	public static final Charset UTF8 = Charset.forName("UTF8");
+	
+	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 	
 	// ==================================================================================
 	//	Meta Data Endpoint
@@ -181,6 +186,8 @@ public class MetaDataReader {
 	private final String iamCredsStatus;
 	/** The elapsed time to populate this reader */
 	private final long elapsed;
+	/** The public key names */
+	private final String[] publicKeys;
 	
 	/**
 	 * Creates a new MetaDataReader
@@ -201,6 +208,7 @@ public class MetaDataReader {
 		macAddress = lookupOrNull(MAC_ADDR);
 		instanceId = lookupOrNull(INSTANCE_ID);
 		instanceAction = lookupOrNull(INSTANCE_ACTION);
+		publicKeys = pubKeys();
 		instanceType = lookupOrNull(INSTANCE_TYPE);
 		final Map<String, String> iamInfo = getJSONValuesForKey(IAM_INFO_JSON);
 		iamInfoLastUpdate = iamInfo.get(JSON_KEY_IAM_LAST_UPDATED);
@@ -281,7 +289,8 @@ public class MetaDataReader {
 		iamCredsLastUpdate = node.has("iamCredsLastUpdate") ? node.get("iamCredsLastUpdate").textValue() : null;
 		iamCredsExpiration = node.has("iamCredsExpiration") ? node.get("iamCredsExpiration").textValue() : null;
 		iamCredsType = node.has("iamCredsType") ? node.get("iamCredsType").textValue() : null;
-		iamCredsStatus = node.has("iamCredsStatus") ? node.get("iamCredsStatus").textValue() : null;	  
+		iamCredsStatus = node.has("iamCredsStatus") ? node.get("iamCredsStatus").textValue() : null;
+		publicKeys = node.has("publicKeys") ? JSONUtil.parseToObject(node.get("publicKeys"), String[].class) : new String[0];
 	    elapsed = System.currentTimeMillis() - start;		
 	}
 	
@@ -316,6 +325,19 @@ public class MetaDataReader {
 		
 	}
 	
+	protected String[] pubKeys() {
+		final String keys = lookupOrNull("public-keys");
+		if(keys==null) return new String[0];
+		final String[] lines = StringHelper.splitString(keys, '\n');
+		final Set<String> names = new HashSet<String>();
+		for(String line: lines) {
+			final String[] pair = StringHelper.splitString(line, '=');
+			if(pair.length==2) {
+				names.add(pair[1]);
+			}
+		}
+		return names.toArray(new String[names.size()]);
+	}
 	
 	protected String lookupOrNull(final String key) {
 		try {
@@ -465,6 +487,14 @@ public class MetaDataReader {
 	 */
 	public String getPublicV4Ip() {
 		return publicV4Ip;
+	}
+	
+	/**
+	 * Returns the public keys
+	 * @return the public keys
+	 */
+	public String[] getPublicKeys() {
+		return publicKeys;
 	}
 
 	/**

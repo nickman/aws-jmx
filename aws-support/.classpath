@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
-  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar" sourcepath="M2_REPO/junit/junit/4.11/junit-4.11-sources.jar">
@@ -14,68 +12,6 @@
       <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="src" path="/helios-aws-jmx-agent"/>
-  <classpathentry kind="var" path="M2_REPO/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7.jar" sourcepath="M2_REPO/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/h2database/h2/1.4.187/h2-1.4.187.jar" sourcepath="M2_REPO/com/h2database/h2/1.4.187/h2-1.4.187-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/h2database/h2/1.4.187/h2-1.4.187-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1.jar" sourcepath="M2_REPO/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="src" path="/heliosutils"/>
-  <classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar" sourcepath="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/21.0/guava-21.0.jar" sourcepath="M2_REPO/com/google/guava/guava/21.0/guava-21.0-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/google/guava/guava/21.0/guava-21.0-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/ecwid/consul/consul-api/1.2.1/consul-api-1.2.1.jar" sourcepath="M2_REPO/com/ecwid/consul/consul-api/1.2.1/consul-api-1.2.1-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/ecwid/consul/consul-api/1.2.1/consul-api-1.2.1-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.3/gson-2.3.jar" sourcepath="M2_REPO/com/google/code/gson/gson/2.3/gson-2.3-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/google/code/gson/gson/2.3/gson-2.3-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.9/commons-codec-1.9.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.9/commons-codec-1.9-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/nwhitehead/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk/1.11.105/aws-java-sdk-1.11.105.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-pinpoint/1.11.105/aws-java-sdk-pinpoint-1.11.105.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-pinpoint/1.11.105/aws-java-sdk-pinpoint-1.11.105-sources.jar">
     <attributes>
@@ -85,6 +21,26 @@
   <classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.105/aws-java-sdk-core-1.11.105.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-core/1.11.105/aws-java-sdk-core-1.11.105-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/amazonaws/aws-java-sdk-core/1.11.105/aws-java-sdk-core-1.11.105-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/apache/httpcomponents/httpclient/4.5.2/httpclient-4.5.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/apache/httpcomponents/httpcore/4.4.4/httpcore-4.4.4-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.9/commons-codec-1.9.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.9/commons-codec-1.9-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar" sourcepath="M2_REPO/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar">
@@ -512,6 +468,11 @@
       <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/jayway/jsonpath/json-path/2.2.0/json-path-2.2.0-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/amazonaws/aws-java-sdk-health/1.11.105/aws-java-sdk-health-1.11.105.jar" sourcepath="M2_REPO/com/amazonaws/aws-java-sdk-health/1.11.105/aws-java-sdk-health-1.11.105-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/amazonaws/aws-java-sdk-health/1.11.105/aws-java-sdk-health-1.11.105-javadoc.jar!/" name="javadoc_location"/>
@@ -581,6 +542,32 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar" sourcepath="M2_REPO/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7.jar" sourcepath="M2_REPO/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/org/postgresql/postgresql/9.4.1208.jre7/postgresql-9.4.1208.jre7-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/h2database/h2/1.4.187/h2-1.4.187.jar" sourcepath="M2_REPO/com/h2database/h2/1.4.187/h2-1.4.187-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/h2database/h2/1.4.187/h2-1.4.187-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1.jar" sourcepath="M2_REPO/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/zaxxer/HikariCP/2.5.1/HikariCP-2.5.1-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="src" path="/heliosutils"/>
+  <classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar" sourcepath="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/21.0/guava-21.0.jar" sourcepath="M2_REPO/com/google/guava/guava/21.0/guava-21.0-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/nwhitehead/.m2/repository/com/google/guava/guava/21.0/guava-21.0-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
 </classpath>

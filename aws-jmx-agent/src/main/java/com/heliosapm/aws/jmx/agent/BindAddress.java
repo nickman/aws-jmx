@@ -29,12 +29,20 @@ public enum BindAddress implements BindAddressProvider {
 		public String getBindAddress() {			
 			return META_SERVICE.getLocalV4Ip();
 		}
+		@Override
+		public String getJMXServiceURL(final int jmxmpPort) {			
+			return "service:jmx:sshjmxmp://" + getBindAddress()  + ":" + jmxmpPort;
+		}
 	},
 	/** The public ip address */
 	PUBLICIP{
 		@Override
 		public String getBindAddress() {			
 			return META_SERVICE.getPublicV4Ip();
+		}
+		@Override
+		public String getJMXServiceURL(final int jmxmpPort) {			
+			return "service:jmx:jmxmp://" + getBindAddress()  + ":" + jmxmpPort;
 		}
 	},
 	/** The local host name */
@@ -43,6 +51,10 @@ public enum BindAddress implements BindAddressProvider {
 		public String getBindAddress() {			
 			return META_SERVICE.getLocalHostName();
 		}
+		@Override
+		public String getJMXServiceURL(final int jmxmpPort) {			
+			return "service:jmx:sshjmxmp://" + getBindAddress()  + ":" + jmxmpPort;
+		}
 	},
 	/** The public host name */
 	PUBLICNAME{
@@ -50,7 +62,22 @@ public enum BindAddress implements BindAddressProvider {
 		public String getBindAddress() {			
 			return META_SERVICE.getPublicHostName();
 		}
-	};
+		@Override
+		public String getJMXServiceURL(final int jmxmpPort) {			
+			return "service:jmx:jmxmp://" + getBindAddress()  + ":" + jmxmpPort;
+		}		
+	},
+	/** The default which is <b><code>127.0.0.1</code></b> */
+	DEFAULT{
+		@Override
+		public String getBindAddress() {			
+			return DEFAULT_JMXMP_BIND;
+		}
+		@Override
+		public String getJMXServiceURL(final int jmxmpPort) {			
+			return "service:jmx:sshjmxmp://" + getBindAddress()  + ":" + jmxmpPort;
+		}		
+	};	
 	
 	
 	/** The system property key to override the default jmxmp bind interface */
@@ -59,6 +86,15 @@ public enum BindAddress implements BindAddressProvider {
 	/** The default jmxmp bind interface */
 	public static final String DEFAULT_JMXMP_BIND = "127.0.0.1";
 
+	
+	public static BindAddress bindAddress() {
+		final String jmxmpBind = ConfigurationHelper.getSystemThenEnvProperty(SYSPROP_JMXMP_BIND, DEFAULT_JMXMP_BIND);
+		try {
+			return valueOf(jmxmpBind.toUpperCase().trim());
+		} catch (Exception ex) {
+			return DEFAULT;
+		}		
+	}
 	
 	/**
 	 * Determines the bind address to bind to

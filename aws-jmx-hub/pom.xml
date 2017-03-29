@@ -17,14 +17,34 @@
 <dependencies>
 
   
-	<!-- ==========================================================
-	    Test Dependencies
-	    ========================================================== -->
-  
-	<dependency>
-	    <groupId>junit</groupId>
-	    <artifactId>junit</artifactId>
-	</dependency>
+		<!-- ==========================================================
+		    Test Dependencies
+		    ========================================================== -->
+	  
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		</dependency>
+
+		<!-- ==========================================================
+		    The AWS JMX Agent 
+		    ========================================================== -->		
+
+		<dependency>
+    		<groupId>com.heliosapm.aws</groupId>
+    		<artifactId>helios-aws-jmx-agent</artifactId>
+    		<version>${project.version}</version>
+		</dependency>
+
+		<!-- ==========================================================
+		    Consul API Dependencies
+		    ========================================================== -->
+
+		<dependency>
+		  <groupId>com.ecwid.consul</groupId>
+		  <artifactId>consul-api</artifactId>
+		</dependency>
+
 
 	<!-- ==========================================================
 	    AWS Dependencies

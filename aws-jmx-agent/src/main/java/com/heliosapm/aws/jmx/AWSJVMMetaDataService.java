@@ -248,6 +248,15 @@ public class AWSJVMMetaDataService implements AWSJVMMetaDataServiceMBean {
 	public String getPublicV4Ip() {
 		return reader.getPublicV4Ip();
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see com.heliosapm.aws.jmx.AWSJVMMetaDataServiceMBean#getPublicKeys()
+	 */
+	@Override
+	public String[] getPublicKeys() {		
+		return reader.getPublicKeys();
+	}
 
 	/**
 	 * {@inheritDoc}

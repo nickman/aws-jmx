@@ -127,6 +127,11 @@ public interface AWSJVMMetaDataServiceMBean {
 	 * @see com.heliosapm.aws.metadata.MetaDataReader#getPublicV4Ip()
 	 */
 	public String getPublicV4Ip();
+	
+	/**
+	 * @return
+	 */
+	public String[] getPublicKeys();
 
 	/**
 	 * @return

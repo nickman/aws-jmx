@@ -13,13 +13,16 @@
 package com.heliosapm.aws.json;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 
@@ -36,12 +39,20 @@ public class JSONUtil {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	private static final JsonFactory jsonFactory = objectMapper.getFactory();
 	
+	static {
+		//objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	}
+	
 	/** Type reference for common string/object maps */
 	public static final TypeReference<HashMap<String, Object>> TR_STR_OBJ_HASH_MAP = 
 	    new TypeReference<HashMap<String, Object>>() {};
 	/** Type reference for common string/string maps */
 	public static final TypeReference<HashMap<String, String>> TR_STR_STR_HASH_MAP = 
 	    new TypeReference<HashMap<String, String>>() {};
+	/** Type reference for common string hash set */
+	public static final TypeReference<HashSet<String>> TR_STR_HASH_SET = 
+	    new TypeReference<HashSet<String>>() {};
+	    
 	
 	/**
 	 * Returns the shared object mapper
@@ -57,6 +68,14 @@ public class JSONUtil {
 	 */
 	public static JsonFactory jsonFactory() {
 		return jsonFactory;
+	}
+	
+	/**
+	 * Creates a new empty ObjectNode
+	 * @return a new empty ObjectNode
+	 */
+	public static ObjectNode newObjectNode() {
+		return objectMapper.createObjectNode();
 	}
 	
 	/**
@@ -106,6 +125,38 @@ public class JSONUtil {
 			return objectMapper.readValue(is, type);
 		} catch (Exception ex) {
 			throw new JSONException("Failed to parse InputStream to object", ex);
+		}
+	}
+	
+	/**
+	 * Reads and parses the content read from the passed URL to an object of the specified type
+	 * @param url The URL to read and parse
+	 * @param type A type reference
+	 * @return the parsed object
+	 */
+	public static final <T> T parseToObject(final URL url, final TypeReference<T> type) {
+		if(url==null) throw new IllegalArgumentException("The passed URL was null");
+		if (type == null) throw new IllegalArgumentException("Missing type reference");
+		try {
+			return objectMapper.readValue(url, type);
+		} catch (Exception ex) {
+			throw new JSONException("Failed to parse URL [" + url + "] to object", ex);
+		}
+	}
+	
+	/**
+	 * Reads and parses the content read from the passed URL to an object of the specified type
+	 * @param url The URL to read and parse
+	 * @param type A type reference
+	 * @return the parsed object
+	 */
+	public static final <T> T parseToObject(final URL url, final Class<T> type) {
+		if(url==null) throw new IllegalArgumentException("The passed URL was null");
+		if (type == null) throw new IllegalArgumentException("Missing type reference");
+		try {
+			return objectMapper.readValue(url, type);
+		} catch (Exception ex) {
+			throw new JSONException("Failed to parse URL [" + url + "] to object", ex);
 		}
 	}
 	
@@ -172,6 +223,50 @@ public class JSONUtil {
 			throw new IllegalArgumentException("Object was null");
 		return objectMapper.convertValue(object, JsonNode.class);
 	}	
+	
+	/**
+	 * Deserializes a JSON formatted string to a specific class type
+	 * <b>Note:</b> If you get mapping exceptions you may need to provide a 
+	 * TypeReference
+	 * @param json The string to deserialize
+	 * @param pojo The class type of the object used for deserialization
+	 * @return An object of the {@code pojo} type
+	 * @throws IllegalArgumentException if the data or class was null or parsing 
+	 * failed
+	 * @throws JSONException if the data could not be parsed
+	 */
+	public static final <T> T parseToObject(final JsonNode json, final TypeReference<T> pojo) {
+		if (json == null)
+			throw new IllegalArgumentException("Incoming data was null or empty");
+		if (pojo == null)
+			throw new IllegalArgumentException("Missing class type");
+
+		try {
+			return objectMapper.convertValue(json, pojo);	
+		} catch (Exception e) {
+			throw new JSONException(e);
+		}
+	}
+	
+	/**
+	 * Deserializes a JSON node to a specific class type
+	 * <b>Note:</b> If you get mapping exceptions you may need to provide a 
+	 * TypeReference
+	 * @param json The node to deserialize
+	 * @param pojo The class type of the object used for deserialization
+	 * @return An object of the {@code pojo} type
+	 * @throws IllegalArgumentException if the data or class was null or parsing 
+	 * failed
+	 * @throws JSONException if the data could not be parsed
+	 */
+	public static final <T> T parseToObject(final JsonNode json, final Class<T> pojo) {
+		if (json == null)
+			throw new IllegalArgumentException("Incoming data was null or empty");
+		if (pojo == null)
+			throw new IllegalArgumentException("Missing class type");
+		return objectMapper.convertValue(json, pojo);		
+	}
+	
 	
 	
 	

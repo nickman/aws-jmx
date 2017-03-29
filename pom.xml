@@ -32,6 +32,7 @@
 		<h2.version>1.4.187</h2.version>
 		<hikari.version>2.5.1</hikari.version>	
 		<guava.version>21.0</guava.version>	
+		<consul.version>1.2.1</consul.version>
 		<!-- Plugin Versions -->
 		<compiler-plugin.version>3.5.1</compiler-plugin.version>
 		<source-plugin.version>2.2</source-plugin.version>
@@ -65,6 +66,17 @@
 		    <version>${junit.version}</version>
 		    <scope>test</scope>
 		</dependency>
+
+		<!-- ==========================================================
+		    Consul API Dependencies
+		    ========================================================== -->
+
+		<dependency>
+		  <groupId>com.ecwid.consul</groupId>
+		  <artifactId>consul-api</artifactId>
+		  <version>${consul.version}</version>
+		</dependency>
+
 
 		<!-- ==========================================================
 		    AWS Dependencies

@@ -1,0 +1,51 @@
+{
+	"info" : "Default configuration for AWS JVM presence listener",
+	"prefetch" : 1,
+	"regionqueues" : {
+		"us-east-1" : ["jmx-agents"]
+	},
+	"credentials" : {
+		"type" : "propsurl",
+		"url" : "/tmp/awscreds.properties"
+	},
+	"clientConfiguration" : {
+	  "userAgentPrefix": null,
+	  "userAgentSuffix": null,
+	  "maxErrorRetry": -1,
+	  "localAddress": null,
+	  "protocol": "HTTPS",
+	  "proxyHost": null,
+	  "proxyPort": -1,
+	  "proxyUsername": null,
+	  "proxyPassword": null,
+	  "proxyDomain": null,
+	  "proxyWorkstation": null,
+	  "nonProxyHosts": null,
+	  "preemptiveBasicProxyAuth": false,
+	  "maxConnections": 50,
+	  "socketTimeout": 50000,
+	  "connectionTimeout": 10000,
+	  "requestTimeout": 0,
+	  "clientExecutionTimeout": 0,
+	  "signerOverride": null,
+	  "connectionTTL": -1,
+	  "connectionMaxIdleMillis": 60000,
+	  "validateAfterInactivityMillis": 5000,
+	  "cacheResponseMetadata": true,
+	  "responseMetadataCacheSize": 50,
+	  "dnsResolver": "",
+	  "headers": {},
+	  "useExpectContinue": true,
+	  "maxConsecutiveRetriesBeforeThrottling": 100,
+	  "algorithm": "NativePRNG",
+	  "provider" : "",
+	  "apacheHttpClientConfig": {
+	    "sslSocketFactory": null
+	  },
+	  "userAgent": "HeliosAWSJMXHub",
+	  "socketBufferSizeHints": [
+	    0,
+	    0
+	  ]
+	}
+}
