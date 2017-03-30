@@ -14,15 +14,20 @@ package sun.net.www.protocol.s3;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.PhantomReference;
+import java.lang.ref.Reference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLStreamHandler;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.cliffc.high_scale_lib.NonBlockingHashMapLong;
 
 import com.amazonaws.ClientConfiguration;
@@ -31,13 +36,22 @@ import com.amazonaws.Request;
 import com.amazonaws.Response;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.metrics.AwsSdkMetrics;
+import com.amazonaws.metrics.MetricType;
 import com.amazonaws.metrics.RequestMetricCollector;
+import com.amazonaws.metrics.RequestMetricType;
+import com.amazonaws.metrics.internal.cloudwatch.PredefinedMetricTransformer;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.MetricDatum;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.AWSRequestMetrics;
+import com.codahale.metrics.Timer;
+import com.heliosapm.aws.metrics.MetricService;
 import com.heliosapm.utils.ref.ReferenceService;
 
 
@@ -51,20 +65,66 @@ import com.heliosapm.utils.ref.ReferenceService;
 
 public class Handler extends URLStreamHandler {
 	
+	private static final MetricService metricService = MetricService.getInstance();
+	
+	
+	
 	private static final RequestMetricCollector requestMetricCollector = new RequestMetricCollector() {
+		private final String REQUEST_TYPE = "RequestType";
+		private final PredefinedMetricTransformer transformer = new PredefinedMetricTransformer();
+		private final Map<String, Timer> metrics = new NonBlockingHashMap<String, Timer>();
+		{
+			metrics.put("GetObjectRequest/HttpClientSendRequestTime", metricService.timer("s3url.GetObjectRequest.HttpClientSendRequestTime"));
+			metrics.put("GetObjectRequest/ClientExecuteTime", metricService.timer("s3url.GetObjectRequest.ClientExecuteTime"));
+			metrics.put("GetObjectRequest/HttpRequestTime", metricService.timer("s3url.GetObjectRequest.HttpRequestTime"));
+			metrics.put("GetObjectRequest/HttpClientReceiveResponseTime", metricService.timer("s3url.GetObjectRequest.HttpClientReceiveResponseTime"));
+		}
+		private String getRequestType(final MetricDatum md) {
+			String requestType = null;
+			if(md!=null) {
+				final List<Dimension> dims = md.getDimensions();
+				if(dims!=null && !dims.isEmpty()) {
+					for(Dimension d: dims) {
+						if(d==null) continue;
+						if(REQUEST_TYPE.equals(d.getName())) {
+							requestType = d.getValue();
+							break;
+						}
+						
+					}
+				}
+			}
+			return requestType;
+		}
 		@Override
 		public void collectMetrics(final Request<?> request, final Response<?> response) {
-			// TODO Auto-generated method stub
-			
+			final AWSRequestMetrics arm = request.getAWSRequestMetrics();
+	        if (arm == null || !arm.isEnabled()) {
+	            return;
+	        }
+	        for (MetricType type: AwsSdkMetrics.getPredefinedMetrics()) {
+	            if (!(type instanceof RequestMetricType))
+	                continue;
+	            for (MetricDatum datum : transformer.toMetricData(type, request, response)) {
+	            	final String key = getRequestType(datum) + "/" + type.name();
+	            	final Timer timer = metrics.get(key);
+	            	if(timer!=null) {
+	            		timer.update(datum.getValue().longValue(), TimeUnit.MILLISECONDS);
+	            	}
+	            }
+	        }
+
 		}
 	};
 	private static final AtomicLong phantomId = new AtomicLong();
-	private static final NonBlockingHashMapLong<PhantomReference<URLConnection>> phantomsRefs = new NonBlockingHashMapLong<PhantomReference<URLConnection>>();
+	private static final NonBlockingHashMapLong<Reference<URLConnection>> connRefs = new NonBlockingHashMapLong<Reference<URLConnection>>();
 	
 	/** User info splitter */
 	public static final Pattern USER_INFO_SPLITTER = Pattern.compile(":");
 	/** File splitter */
 	public static final Pattern FILE_PATH_SPLITTER = Pattern.compile("/");
+	
+	
 	
 	private static Regions tryRegion(final String reg) {
 		try {
@@ -74,12 +134,32 @@ public class Handler extends URLStreamHandler {
 		}
 	}
 	
-	private static Runnable closer(final S3Object s3Obj) {
-		return new Runnable() {
+	static {
+		metricService.gauge(5, "s3.urlconnections", new Callable<Integer>(){
+			@Override
+			public Integer call() throws Exception {				
+				return connRefs.size();
+			}
+		});
+	}
+	
+	public static int refCount() {
+		return connRefs.size();
+	}
+	
+	private static void closer(final URLConnection conn, final S3Object s3Obj) {
+		final long refId = phantomId.incrementAndGet();
+		final Runnable r = new Runnable() {
 			public void run() {
+//				System.out.println("Closing S3 URLConn Reference:" + refId);
 				try { s3Obj.close(); } catch (Exception x) {/* No Op */}
+				connRefs.remove(refId);
 			}
 		};
+		final Reference<URLConnection> ref = ReferenceService.getInstance().newPhantomReference(conn, r);
+		connRefs.put(refId, ref);
+//		System.out.println("Created S3 URLConn Reference:" + refId);
+		
 	}
 	
 	
@@ -190,9 +270,7 @@ public class Handler extends URLStreamHandler {
 						builder.setClientConfiguration(cc);
 						client = builder.build();
 						s3obj = client.getObject(bucket, key);
-						
-						final PhantomReference<URLConnection> ref = ReferenceService.getInstance().newPhantomReference(conn, closer(s3obj));
-						
+						closer(conn, s3obj);												
 						metadata = s3obj.getObjectMetadata();
 						this.connected = true;
 					} catch (Exception e) {

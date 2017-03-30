@@ -1,14 +1,18 @@
 package com.heliosapm.aws.jmx;
 
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
+import com.heliosapm.utils.config.ConfigurationHelper;
 import com.heliosapm.utils.io.StdInCommandHandler;
 import com.heliosapm.utils.jmx.JMXHelper;
+import com.heliosapm.utils.time.SystemClock;
+import com.heliosapm.utils.time.SystemClock.ElapsedTime;
 import com.heliosapm.utils.url.URLHelper;
+
+import sun.net.www.protocol.s3.Handler;
 
 public class TestCPUrl {
 
@@ -30,6 +34,12 @@ public class TestCPUrl {
 		}
 	}
 	
+	static String[] readCredentials() {
+		final String source = ConfigurationHelper.getSystemThenEnvProperty("aws.credentials", "NONE");
+		if("NONE".equals(source) || source==null || source.trim().isEmpty()) throw new RuntimeException("No credentials source defined");
+		return readCredentials(source);
+	}
+	
 	static String[] readCredentials(final String source) {  
 		final URL url = URLHelper.toURL(source);
 		final Properties p = URLHelper.readProperties(url);
@@ -47,6 +57,8 @@ public class TestCPUrl {
 		
 	};
 	
+	public static final Charset UTF8 = Charset.forName("UTF8");
+	
 	static void log(Object msg) {
 		System.out.println(msg);
 	}
@@ -54,22 +66,41 @@ public class TestCPUrl {
 	public static void main(String[] args) {
 		JMXHelper.fireUpJMXMPServer(2194);
 		try {
-			final String[] localCreds = readCredentials("/tmp/creds.txt");
+			final String[] localCreds = readCredentials();
 			final String url = "s3://" + enc(localCreds[0]) + ":" + enc(localCreds[1]) + "@us-east-1/nwhitehead.test/rivercalleddenial/test.txt";
 			final URL s3Url = new URL(url);
-			URLConnection urc = s3Url.openConnection();
-			InputStream is = urc.getInputStream();
-			final byte[] buff = new byte[1024];
-			int bytesread = -1;
-			while((bytesread = is.read(buff))!=-1) {
-				
+//			URLConnection urc = s3Url.openConnection();
+//			InputStream is = urc.getInputStream();
+//			final int size = urc.getContentLength();
+//			final ByteArrayOutputStream baos = new ByteArrayOutputStream(size); 
+//			final byte[] buff = new byte[1024];
+//			int bytesread = -1;
+//			while((bytesread = is.read(buff))!=-1) {
+//				baos.write(buff, 0, bytesread);
+//			}
+//			final String output = new String(baos.toByteArray(), UTF8);
+//			log("Output: [" + output + "]");
+//			//is.close();
+//			is = null;
+//			urc = null;
+//			//System.gc();
+			final int LOOPS = 100;
+			final ElapsedTime et = SystemClock.startClock();
+			for(int i = 0; i < LOOPS; i++) {
+				final String val = URLHelper.getTextFromURL(s3Url).trim();
+				if(!"Hello Neptune !".equals(val)) {
+					System.err.println("Val mismatch [" + val + "]");
+				}
 			}
-			urc = null;
-			System.gc();
-			StdInCommandHandler.getInstance().run();
+			log("\n\nELAPSED:" + et.printAvg("Requests", LOOPS));
+			StdInCommandHandler.getInstance()
+				.registerCommand("refs", new Runnable(){
+					public void run() {
+						log("S3 URLConn Refs:" + Handler.refCount());
+					}
+				})
+				.run();
 					
-//			final String text = URLHelper.getTextFromURL(s3Url, 1, 1);
-//			log("Text: [" + text + "]");
 		} catch (Exception ex) {
 			ex.printStackTrace(System.err);
 		}
