@@ -190,7 +190,9 @@ public class Handler extends URLStreamHandler {
 						builder.setClientConfiguration(cc);
 						client = builder.build();
 						s3obj = client.getObject(bucket, key);
+						
 						final PhantomReference<URLConnection> ref = ReferenceService.getInstance().newPhantomReference(conn, closer(s3obj));
+						
 						metadata = s3obj.getObjectMetadata();
 						this.connected = true;
 					} catch (Exception e) {

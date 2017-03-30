@@ -4,9 +4,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Properties;
 
 import com.heliosapm.utils.io.StdInCommandHandler;
 import com.heliosapm.utils.jmx.JMXHelper;
+import com.heliosapm.utils.url.URLHelper;
 
 public class TestCPUrl {
 
@@ -28,12 +30,21 @@ public class TestCPUrl {
 		}
 	}
 	
+	static String[] readCredentials(final String source) {  
+		final URL url = URLHelper.toURL(source);
+		final Properties p = URLHelper.readProperties(url);
+		return new String[]{
+			p.getProperty("access", "null"),
+			p.getProperty("secret", "null")
+		};
+	}
+	
 	static final String[] URLS = {
 		"s3://mykey:mysecret@us-east-1/le-bucket/le-filename",
 //		"s3://mykey:mysecret@le-bucket/le-filename",
 //		"s3://le-bucket/le-filename",
 //		"s3://le-bucket/le-directory/le-filename",
-		"s3://" + enc("AKIAJOI6KCQC6SNVJ7NA") + ":" + enc("BZjpJip0f+YxOFSAnm+1wgjUUmOoPXj+w4WWxC/w") + "@us-east-1/nwhitehead.test/test.txt"
+		
 	};
 	
 	static void log(Object msg) {
@@ -43,7 +54,8 @@ public class TestCPUrl {
 	public static void main(String[] args) {
 		JMXHelper.fireUpJMXMPServer(2194);
 		try {
-			final String url = "s3://" + enc("AKIAJOI6KCQC6SNVJ7NA") + ":" + enc("BZjpJip0f+YxOFSAnm+1wgjUUmOoPXj+w4WWxC/w") + "@us-east-1/nwhitehead.test/rivercalleddenial/test.txt";
+			final String[] localCreds = readCredentials("/tmp/creds.txt");
+			final String url = "s3://" + enc(localCreds[0]) + ":" + enc(localCreds[1]) + "@us-east-1/nwhitehead.test/rivercalleddenial/test.txt";
 			final URL s3Url = new URL(url);
 			URLConnection urc = s3Url.openConnection();
 			InputStream is = urc.getInputStream();
